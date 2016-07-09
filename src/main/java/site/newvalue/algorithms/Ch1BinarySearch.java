@@ -32,7 +32,6 @@ public class Ch1BinarySearch {
         else {
             return mid;
         }
-
     }
 
     public static void main(String[] args) {

@@ -171,10 +171,9 @@ public class Solution {
          /  \      \
         7    2      1
         */
-        int[] arr = {1, 4, 5, 7, 8, 2, 6};
-        ListNode listNode = constructList(arr);
         Integer[] nums = {5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, 1};
         TreeNode root = constructTree(nums);
+        printTree(root);
 
     }
 
