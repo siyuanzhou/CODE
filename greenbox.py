@@ -3,7 +3,7 @@ import os
 from random import randint
 
 now = datetime.datetime.now()
-start = now.replace(year=2018)
+start = now.replace(year=2019)
 
 
 def change_day():
