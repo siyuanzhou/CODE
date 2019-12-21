@@ -25,12 +25,10 @@ public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
         ListNode[] lists = new ListNode[3];
-        lists[0] = Tools.setList(new int[]{1, 4, 5, 6, 7, 8, 9, 23});
-        lists[1] = Tools.setList(new int[]{1, 3, 4, 5, 8, 9, 12});
-        lists[2] = Tools.setList(new int[]{2, 6, 8});
-        // s.mergeKLists3(lists);
-        // Tools.printList(s.mergeKLists3(lists));
-        System.out.println(s.countAndSay(5));
+        lists[0] = Tools.arr2List(new int[]{1, 4, 5, 6, 7, 8, 9, 23});
+        lists[1] = Tools.arr2List(new int[]{1, 3, 4, 5, 8, 9, 12});
+        lists[2] = Tools.arr2List(new int[]{2, 6, 8});
+        
 
     }
 
@@ -238,14 +236,6 @@ public class Solution {
         return preHead.next;
     }
 
-    public ListNode mergeKLists3(ListNode[] lists) {
-        ListNode ans = lists[0];
-        for (int i = 1; i < lists.length; i++) {
-            ans = mergeTwoLists(ans, lists[i]);
-        }
-        return ans;
-    }
-
     // 27
     public int removeElement(int[] nums, int val) {
         int len = nums.length;
@@ -359,7 +349,7 @@ public class Solution {
             }
         }
 
-        public static ListNode setList(int[] arr) {
+        public static ListNode arr2List(int[] arr) {
             ListNode node = new ListNode(0);
             ListNode p = node;
             for (int i = 0; i < arr.length; i++) {

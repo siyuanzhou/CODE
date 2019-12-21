@@ -63,6 +63,7 @@ public class Main {
             }
         }
         System.out.println(l.getFirst());
+        in.close();
     }
 
     public int findMaxDivision(int[] A, int n) {
