@@ -22,9 +22,26 @@ class TreeNode {
 }
 
 public class Solution {
+    static class Tools {
+        public static void printList(ListNode L) {
+            while (L != null) {
+                System.out.print(L.val + "->");
+                L = L.next;
+            }
+        }
+
+        public static ListNode arr2List(int[] arr) {
+            ListNode node = new ListNode(0);
+            ListNode p = node;
+            for (int i = 0; i < arr.length; i++) {
+                p.next = new ListNode(arr[i]);
+                p = p.next;
+            }
+            return node.next;
+        }
+    }
     public static void main(String[] args) {
         Solution s = new Solution();
-
 
     }
 
@@ -337,22 +354,4 @@ public class Solution {
         return ans;
     }
 
-    static class Tools {
-        public static void printList(ListNode L) {
-            while (L != null) {
-                System.out.print(L.val + "->");
-                L = L.next;
-            }
-        }
-
-        public static ListNode arr2List(int[] arr) {
-            ListNode node = new ListNode(0);
-            ListNode p = node;
-            for (int i = 0; i < arr.length; i++) {
-                p.next = new ListNode(arr[i]);
-                p = p.next;
-            }
-            return node.next;
-        }
-    }
 }
