@@ -1,4 +1,4 @@
-package site.newvalue.mycollections;
+package site.newvalue.other.mycollections;
 
 import java.util.*;
 

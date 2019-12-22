@@ -24,10 +24,7 @@ class TreeNode {
 public class Solution {
     public static void main(String[] args) {
         Solution s = new Solution();
-        ListNode[] lists = new ListNode[3];
-        lists[0] = Tools.arr2List(new int[]{1, 4, 5, 6, 7, 8, 9, 23});
-        lists[1] = Tools.arr2List(new int[]{1, 3, 4, 5, 8, 9, 12});
-        lists[2] = Tools.arr2List(new int[]{2, 6, 8});
+        System.out.println("nihao");
         
 
     }
