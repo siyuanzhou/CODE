@@ -1,6 +1,7 @@
 package site.newvalue.leetcode;
 
-import java.util.*;
+import java.util.Deque;
+import java.util.LinkedList;
 
 class ListNode {
     int val;
@@ -22,336 +23,150 @@ class TreeNode {
 }
 
 public class Solution {
-    static class Tools {
-        public static void printList(ListNode L) {
-            while (L != null) {
-                System.out.print(L.val + "->");
-                L = L.next;
-            }
-        }
-
-        public static ListNode arr2List(int[] arr) {
-            ListNode node = new ListNode(0);
-            ListNode p = node;
-            for (int i = 0; i < arr.length; i++) {
-                p.next = new ListNode(arr[i]);
-                p = p.next;
-            }
-            return node.next;
-        }
-    }
-    public static void main(String[] args) {
-        Solution s = new Solution();
-
-    }
-
-    // 1
-    public int[] twoSum(int[] nums, int target) {
-        int[] ans = new int[2];
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                if (nums[i] + nums[j] == target) {
-                    ans[0] = i;
-                    ans[1] = j;
-                }
-            }
-        }
-        return ans;
-    }
-
-    // 1改
-    public int[] twoSum2(int[] nums, int target) {
-        int[] ans = new int[2];
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-        for (int i = 0; i < nums.length; i++) {
-            map.put(nums[i], i);
-        }
-        for (int j = 0; j < nums.length; j++) {
-            if (map.containsKey(target - nums[j]) && map.get(target - nums[j]) != j) {
-                ans[0] = j;
-                ans[1] = map.get(target - nums[j]);
-                return ans;
-            }
-        }
-
-        return ans;
-    }
-
-    // 9
-    public boolean isPalindrome(int x) {
-        if (x < 0) {
-            return false;
-        } else {
-            int num = 0;
-            int cur = x;
-            while (cur != 0) {
-                num = num * 10 + cur % 10;
-                cur /= 10;
-            }
-            return num == x;
+    //常用静态方法
+    //打印链表
+    public static void printList(ListNode L) {
+        while (L != null) {
+            System.out.print(L.val + "->");
+            L = L.next;
         }
     }
 
-    // 13
-    public int romanToInt(String s) {
-        Map<Character, Integer> romanMap = new HashMap<Character, Integer>();
-        romanMap.put('I', 1);
-        romanMap.put('V', 5);
-        romanMap.put('X', 10);
-        romanMap.put('L', 50);
-        romanMap.put('C', 100);
-        romanMap.put('D', 500);
-        romanMap.put('M', 1000);
-        int ans = 0;
-        for (int i = 0; i < s.length() - 1; i++) {
-            if (romanMap.get(s.charAt(i)) < romanMap.get(s.charAt(i + 1))) {
-                ans -= romanMap.get(s.charAt(i));
-            } else {
-                ans += romanMap.get(s.charAt(i));
-            }
-        }
-        ans += romanMap.get(s.charAt(s.length() - 1));
-        return ans;
-
-    }
-
-    // 14
-    public String longestCommonPrefix(String[] strs) {
-
-        StringBuilder ans = new StringBuilder();
-        if (strs.length == 0) {
-            return ans.toString();
-        }
-
-        outer:
-        for (int i = 0; i < strs[0].length(); i++) {
-            char a = strs[0].charAt(i);
-            for (int j = 1; j < strs.length; j++) {
-                if (i > strs[j].length() || a != strs[j].charAt(i)) {
-                    break outer;
-                }
-            }
-            ans.append(a);
-        }
-        return ans.toString();
-    }
-
-    // 20
-    public boolean isValid(String s) {
-        Deque<Character> stack = new LinkedList<Character>();
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if ((!stack.isEmpty()) && ((c == ')' && stack.peekFirst() == '(') || (c == ']' && stack.peekFirst() == '[')
-                    || (c == '}' && stack.peekFirst() == '{'))) {
-                stack.pop();
-            } else {
-                stack.push(c);
-            }
-        }
-        return stack.isEmpty();
-    }
-
-    // 21
-    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        if (l1 == null) {
-            return l2;
-        } else if (l2 == null) {
-            return l1;
-        } else if (l1.val < l2.val) {
-            l1.next = mergeTwoLists(l1.next, l2);
-            return l1;
-        } else {
-            l2.next = mergeTwoLists(l1, l2.next);
-            return l2;
-        }
-    }
-
-    public ListNode mergeTwoLists2(ListNode l1, ListNode l2) {
-        if (l1 == null) {
-            return l2;
-        } else if (l2 == null) {
-            return l1;
-        }
-        ListNode preHead = new ListNode(0);
-        ListNode prev = preHead;
-        while (l1 != null && l2 != null) {
-            if (l1.val < l2.val) {
-                prev.next = l1;
-                l1 = l1.next;
-            } else {
-                prev.next = l2;
-                l2 = l2.next;
-            }
-            prev = prev.next;
-        }
-        if (l1 == null) {
-            prev.next = l2;
-        } else if (l2 == null) {
-            prev.next = l1;
-        }
-        return preHead.next;
-    }
-
-    // 23
-    public ListNode mergeKLists(ListNode[] lists) {
-        ArrayList<Integer> ans = new ArrayList<Integer>();
-        for (int i = 0; i < lists.length; i++) {
-            while (lists[i] != null) {
-                ans.add(lists[i].val);
-                lists[i] = lists[i].next;
-            }
-        }
-        Collections.sort(ans);
+    //数组构建链表
+    public static ListNode constructList(int[] arr) {
         ListNode node = new ListNode(0);
         ListNode p = node;
-        for (int i = 0; i < ans.size(); i++) {
-            p.next = new ListNode(ans.get(i));
+        for (int i = 0; i < arr.length; i++) {
+            p.next = new ListNode(arr[i]);
             p = p.next;
         }
-        Tools.printList(node.next);
         return node.next;
     }
 
-    public ListNode mergeKLists2(ListNode[] lists) {
-        ListNode preHead = new ListNode(0);
-        ListNode prev = preHead;
-        int min = Integer.MAX_VALUE;
-        boolean flag = true;
-        while (flag == true) {
-            for (int i = 0; i < lists.length; i++) {
-                if (lists[i] == null) {
-                    continue;
+    //数组构建二叉树
+    public static TreeNode constructTree(Integer[] nums) {
+        if (nums.length == 0) return new TreeNode(0);
+        Deque<TreeNode> nodeQueue = new LinkedList<>();
+        // 创建一个根节点
+        TreeNode root = new TreeNode(nums[0]);
+        nodeQueue.offer(root);
+        TreeNode cur;
+        // 记录当前行节点的数量（注意不一定是2的幂，而是上一行中非空节点的数量乘2）
+        int lineNodeNum = 2;
+        // 记录当前行中数字在数组中的开始位置
+        int startIndex = 1;
+        // 记录数组中剩余的元素的数量
+        int restLength = nums.length - 1;
+
+        while (restLength > 0) {
+            // 只有最后一行可以不满，其余行必须是满的
+
+            for (int i = startIndex; i < startIndex + lineNodeNum; i = i + 2) {
+                // 说明已经将nums中的数字用完，此时应停止遍历，并可以直接返回root
+                if (i == nums.length) return root;
+                cur = nodeQueue.poll();
+                if (nums[i] != null) {
+                    cur.left = new TreeNode(nums[i]);
+                    nodeQueue.offer(cur.left);
                 }
-                if (lists[i].val < min) {
-                    min = lists[i].val;
+                // 同上，说明已经将nums中的数字用完，此时应停止遍历，并可以直接返回root
+                if (i + 1 == nums.length) return root;
+                if (nums[i + 1] != null) {
+                    cur.right = new TreeNode(nums[i + 1]);
+                    nodeQueue.offer(cur.right);
                 }
             }
-            for (int i = 0; i < lists.length; i++) {
-                if (lists[i] == null) {
-                    continue;
-                }
-                if (lists[i].val == min) {
-                    prev.next = lists[i];
-                    lists[i] = lists[i].next;
-                    prev = prev.next;
-                    min = Integer.MAX_VALUE;
-                }
-            }
-            for (int i = 0; i < lists.length; i++) {
-                if (lists[i] != null) {
-                    flag = true;
-                    break;
-                }
-                flag = false;
-            }
+            startIndex += lineNodeNum;
+            restLength -= lineNodeNum;
+            lineNodeNum = nodeQueue.size() * 2;
         }
-        Tools.printList(preHead.next);
-        return preHead.next;
+        return root;
     }
 
-    // 27
-    public int removeElement(int[] nums, int val) {
-        int len = nums.length;
-        int j = 0;
-        for (int i = 0; i < len; i++) {
-            if (nums[i] != val) {
-                nums[j++] = nums[i];
-            }
-        }
-        return j;
+    // 用于获得树的层数
+    public static int getTreeDepth(TreeNode root) {
+        return root == null ? 0 : (1 + Math.max(getTreeDepth(root.left), getTreeDepth(root.right)));
     }
 
-    // 27改
-    public int removeElement2(int[] nums, int val) {
-        int ans = nums.length;
-        for (int i = 0; i < ans; ) {
-            if (nums[i] != val) {
-                i++;
-            } else {
-                nums[i] = nums[ans - 1];
-                ans--;
-            }
+    private static void writeArray(TreeNode currNode, int rowIndex, int columnIndex, String[][] res, int treeDepth) {
+        // 保证输入的树不为空
+        if (currNode == null) return;
+        // 先将当前节点保存到二维数组中
+        res[rowIndex][columnIndex] = String.valueOf(currNode.val);
+
+        // 计算当前位于树的第几层
+        int currLevel = ((rowIndex + 1) / 2);
+        // 若到了最后一层，则返回
+        if (currLevel == treeDepth) return;
+        // 计算当前行到下一行，每个元素之间的间隔（下一行的列索引与当前元素的列索引之间的间隔）
+        int gap = treeDepth - currLevel - 1;
+
+        // 对左儿子进行判断，若有左儿子，则记录相应的"/"与左儿子的值
+        if (currNode.left != null) {
+            res[rowIndex + 1][columnIndex - gap] = "/";
+            writeArray(currNode.left, rowIndex + 2, columnIndex - gap * 2, res, treeDepth);
         }
-        return ans;
+
+        // 对右儿子进行判断，若有右儿子，则记录相应的"\"与右儿子的值
+        if (currNode.right != null) {
+            res[rowIndex + 1][columnIndex + gap] = "\\";
+            writeArray(currNode.right, rowIndex + 2, columnIndex + gap * 2, res, treeDepth);
+        }
     }
 
-    // 38
-    public String countAndSay(int n) {
-        String str = "1";
-        for (int i = 2; i <= n; i++) {
+    //打印树
+    public static void printTree(TreeNode root) {
+        if (root == null) System.out.println("EMPTY!");
+        // 得到树的深度
+        int treeDepth = getTreeDepth(root);
+
+        // 最后一行的宽度为2的（n - 1）次方乘3，再加1
+        // 作为整个二维数组的宽度
+        int arrayHeight = treeDepth * 2 - 1;
+        int arrayWidth = (2 << (treeDepth - 2)) * 3 + 1;
+        // 用一个字符串数组来存储每个位置应显示的元素
+        String[][] res = new String[arrayHeight][arrayWidth];
+        // 对数组进行初始化，默认为一个空格
+        for (int i = 0; i < arrayHeight; i++) {
+            for (int j = 0; j < arrayWidth; j++) {
+                res[i][j] = " ";
+            }
+        }
+
+        // 从根节点开始，递归处理整个树
+        // res[0][(arrayWidth + 1)/ 2] = (char)(root.val + '0');
+        writeArray(root, 0, arrayWidth / 2, res, treeDepth);
+
+        // 此时，已经将所有需要显示的元素储存到了二维数组中，将其拼接并打印即可
+        for (String[] line : res) {
             StringBuilder sb = new StringBuilder();
-            char pre = str.charAt(0);
-            int count = 1;
-            for (int j = 1; j < str.length(); j++) {
-                if (pre == str.charAt(j)) {
-                    count++;
-                } else {
-
-                    sb.append(count).append(pre);
-                    pre = str.charAt(j);
-                    count = 1;
+            for (int i = 0; i < line.length; i++) {
+                sb.append(line[i]);
+                if (line[i].length() > 1 && i <= line.length - 1) {
+                    i += line[i].length() > 4 ? 2 : line[i].length() - 1;
                 }
             }
-            sb.append(count).append(pre);
-            str = sb.toString();
+            System.out.println(sb.toString());
         }
-
-        return str;
     }
 
-    // 100
-    public boolean isSameTree(TreeNode p, TreeNode q) {
-        if (p == null && q == null) {
-            return true;
-        }
-        if ((p == null && q != null) || (q == null && p != null) || (p.val != q.val)) {
-            return false;
-        }
-        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+
+    public static void main(String[] args) {
+        /*用于测试的树，
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \      \
+        7    2      1
+        */
+        int[] arr = {1, 4, 5, 7, 8, 2, 6};
+        ListNode listNode = constructList(arr);
+        Integer[] nums = {5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, 1};
+        TreeNode root = constructTree(nums);
 
     }
 
-    // 200
-    public int numIslands(char[][] grid) {
-        if (grid == null || grid.length == 0) {
-            return 0;
-        }
-        int ans = 0;
-        int rowlen = grid.length;
-        int collen = grid[0].length;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j] == '1') {
-                    ans++;
-                    grid[i][j] = '0';
-                    Queue<Integer> q = new LinkedList<Integer>();
-                    q.offer(i * collen + j);
-                    while (!q.isEmpty()) {
-                        int id = q.poll();
-                        int row = id / collen;
-                        int col = id % collen;
-                        if (row - 1 >= 0 && grid[row - 1][col] == '1') {
-                            q.offer((row - 1) * collen + col);
-                            grid[row - 1][col] = '0';
-                        }
-                        if (row + 1 < rowlen && grid[row + 1][col] == '1') {
-                            q.offer((row + 1) * collen + col);
-                            grid[row + 1][col] = '0';
-                        }
-                        if (col - 1 >= 0 && grid[row][col - 1] == '1') {
-                            q.offer(id - 1);
-                            grid[row][col - 1] = '0';
-                        }
-                        if (col + 1 < collen && grid[row][col + 1] == '1') {
-                            q.offer(id + 1);
-                            grid[row][col + 1] = '0';
-                        }
-                    }
-
-                }
-            }
-        }
-        return ans;
-    }
 
 }
