@@ -3,7 +3,7 @@
 
 # Log file
 *.log
-
+*.iml
 # BlueJ files
 *.ctxt
 
@@ -37,4 +37,5 @@ out/
 logs
 /log
 /tmp
+/.idea
 hotspot.log
