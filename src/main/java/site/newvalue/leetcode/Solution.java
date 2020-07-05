@@ -45,7 +45,9 @@ public class Solution {
 
     //数组构建二叉树
     public static TreeNode constructTree(Integer[] nums) {
-        if (nums.length == 0) return new TreeNode(0);
+        if (nums.length == 0){
+            return new TreeNode(0);
+        }
         Deque<TreeNode> nodeQueue = new LinkedList<>();
         // 创建一个根节点
         TreeNode root = new TreeNode(nums[0]);
@@ -63,7 +65,9 @@ public class Solution {
 
             for (int i = startIndex; i < startIndex + lineNodeNum; i = i + 2) {
                 // 说明已经将nums中的数字用完，此时应停止遍历，并可以直接返回root
-                if (i == nums.length) return root;
+                if (i == nums.length) {
+                    return root;
+                }
                 cur = nodeQueue.poll();
                 if (nums[i] != null) {
                     cur.left = new TreeNode(nums[i]);
@@ -90,14 +94,18 @@ public class Solution {
 
     private static void writeArray(TreeNode currNode, int rowIndex, int columnIndex, String[][] res, int treeDepth) {
         // 保证输入的树不为空
-        if (currNode == null) return;
+        if (currNode == null) {
+            return;
+        }
         // 先将当前节点保存到二维数组中
         res[rowIndex][columnIndex] = String.valueOf(currNode.val);
 
         // 计算当前位于树的第几层
         int currLevel = ((rowIndex + 1) / 2);
         // 若到了最后一层，则返回
-        if (currLevel == treeDepth) return;
+        if (currLevel == treeDepth) {
+            return;
+        }
         // 计算当前行到下一行，每个元素之间的间隔（下一行的列索引与当前元素的列索引之间的间隔）
         int gap = treeDepth - currLevel - 1;
 
@@ -116,7 +124,9 @@ public class Solution {
 
     //打印树
     public static void printTree(TreeNode root) {
-        if (root == null) System.out.println("EMPTY!");
+        if (root == null){
+            System.out.println("EMPTY!");
+        }
         // 得到树的深度
         int treeDepth = getTreeDepth(root);
 
