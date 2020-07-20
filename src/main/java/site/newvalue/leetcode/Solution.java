@@ -1,12 +1,13 @@
 package site.newvalue.leetcode;
 
-import java.util.Deque;
-import java.util.LinkedList;
+import edu.princeton.cs.algs4.In;
+
+import java.util.*;
 
 class ListNode {
     int val;
     ListNode next;
-
+    ListNode(){}
     ListNode(int x) {
         val = x;
     }
@@ -16,11 +17,12 @@ class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
-
+    TreeNode(){}
     TreeNode(int x) {
         val = x;
     }
 }
+
 
 public class Solution {
     //常用静态方法
@@ -160,6 +162,142 @@ public class Solution {
         }
     }
 
+    // 中序遍历二叉搜索树
+    public static void InorderTraversal(TreeNode root,LinkedList<Integer> l){
+        if(root==null){
+            return;
+        }
+        InorderTraversal(root.left,l);
+        l.add(root.val);
+        InorderTraversal(root.right,l);
+    }
+
+
+    //1 两数之和，给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer,Integer> map=new HashMap<>();
+        for(int i=0;i<nums.length;i++){
+            int a=target-nums[i];
+            if(map.containsKey(a)){
+                return new int[]{map.get(a),i};
+            }
+            map.put(nums[i],i);
+        }
+        throw new IllegalArgumentException("No two sum solution");
+    }
+
+    //2 两数相加
+    //给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
+    //如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode p=l1,q=l2;
+        ListNode ans=new ListNode();
+        ListNode n=ans;
+        int carry=0;//进位
+        while (p!=null||q!=null){
+            int pval=(p==null)?0:p.val;
+            int qval=(q==null)?0:q.val;
+            int temp=(pval+qval+carry)%10;
+            carry=(pval+qval+carry)/10;
+            n.next=new ListNode(temp);
+            n=n.next;
+            if(p!=null){
+                p=p.next;
+            }
+            if(q!=null){
+                q=q.next;
+            }
+        }
+        if(carry==1){
+            n.next=new ListNode(1);
+        }
+        return ans.next;
+    }
+    //229. 求众数 II
+    //给定一个大小为 n 的数组，找出其中所有出现超过 ⌊ n/3 ⌋ 次的元素。
+    //说明: 要求算法的时间复杂度为 O(n)，空间复杂度为 O(1)。
+    //1、如果投A（当前元素等于A），则A的票数++;
+    //2、如果投B（当前元素等于B），B的票数++；
+    //3、如果A,B都不投（即当前与A，B都不相等）,那么检查此时A或B的票数是否减为0，如果为0,则当前元素成为新的候选人；如果A,B两个人的票数都不为0，那么A,B两个候选人的票数均减一。
+    //最后会有这么几种可能：有2个大于n/3，有1个大于n/3，有0个大于n/3
+    //遍历结束后选出了两个候选人，但是这两个候选人是否满足>n/3
+    public List<Integer> majorityElement(int[] nums) {
+        List<Integer> ans=new ArrayList<>();
+        int cand1=0,count1=0;
+        int cand2=0,count2=0;
+        for(int num:nums){
+            if(cand1==num){
+                count1++;
+                continue;
+            }
+            if(cand2==num){
+                count2++;
+                continue;
+            }
+            if (count1==0){
+                cand1=num;
+                count1++;
+                continue;
+            }
+            if (count2==0){
+                cand2=num;
+                count2++;
+                continue;
+            }
+            count1--;
+            count2--;
+        }
+        count1=0;
+        count2=0;
+        for (int num:nums){
+            if(cand1==num){
+                count1++;
+                continue;
+            }
+            if (cand2==num){
+                count2++;
+                continue;
+            }
+        }
+        if(count1>=nums.length/3){
+            ans.add(cand1);
+        }
+        if(count2>=nums.length/3){
+            ans.add(cand2);
+        }
+        return ans;
+    }
+
+    //1305. 两棵二叉搜索树中的所有元素 给你 root1 和 root2 这两棵二叉搜索树。
+    //请你返回一个列表，其中包含 两棵树 中的所有整数并按 升序 排序。
+    //先中序搜索，得到有序的两个列表，后归并排序，得到最终结果
+    public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
+        LinkedList<Integer> ans=new LinkedList<>();
+        LinkedList<Integer> l1=new LinkedList<>();
+        InorderTraversal(root1,l1);
+        LinkedList<Integer> l2= new LinkedList<>();
+        InorderTraversal(root2,l2);
+        int i=0,j=0;
+        for(;i<l1.size()&&j<l2.size();){
+            if(l1.get(i)<=l2.get(j)){
+                ans.add(l1.get(i));
+                i++;
+            }
+            else if(l1.get(i)>l2.get(j)){
+                ans.add(l2.get(j));
+                j++;
+            }
+        }
+        while (j<l2.size()){
+            ans.add(l2.get(j));
+            j++;
+        }
+        while (i<l1.size()){
+            ans.add(l1.get(i));
+            i++;
+        }
+        return ans;
+    }
 
     public static void main(String[] args) {
         /*用于测试的树，
@@ -173,7 +311,12 @@ public class Solution {
         */
         Integer[] nums = {5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, 1};
         TreeNode root = constructTree(nums);
-        printTree(root);
+//        printTree(root);
+        LinkedList<Integer> l=new LinkedList<>();
+        InorderTraversal(root,l);
+        for (int i=0;i<l.size();i++){
+            System.out.println(l.get(i));
+        }
 
     }
 

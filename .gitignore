@@ -39,3 +39,4 @@ logs
 /tmp
 /.idea
 hotspot.log
+src/main/resources/data
