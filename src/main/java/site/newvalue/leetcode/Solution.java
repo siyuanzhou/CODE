@@ -2,6 +2,7 @@ package site.newvalue.leetcode;
 
 import edu.princeton.cs.algs4.In;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 class ListNode {
@@ -213,6 +214,102 @@ public class Solution {
         }
         return ans.next;
     }
+
+    //28. 实现 strStr()
+    //实现 strStr() 函数。
+    //给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
+    public int strStr(String haystack, String needle) {
+        if(haystack.length()==0){
+            return -1;
+        }
+        int m=haystack.length(),n=needle.length();
+        int pn=0;
+        while (pn<m-n+1){
+            while (pn<m-n+1&&haystack.charAt(pn)!=needle.charAt(0)){
+                pn++;
+            }
+            int pl=0,cur=pn;
+            while (haystack.charAt(cur)==needle.charAt(pl)){
+                pl++;
+                cur++;
+            }
+            if(pl==n){
+                return pn;
+            }
+            else {
+                pn=pn+1;
+            }
+        }
+        return -1;
+    }
+
+    //反转字符串
+    //编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 char[] 的形式给出
+    public void reverseString(char[] s) {
+        int l=s.length;
+        for(int i=0;i<l/2;i++){
+            char tmp=s[i];
+            s[i]=s[l-i-1];
+            s[l-i-1]=tmp;
+        }
+        Arrays.binarySearch(s,'a');
+    }
+
+
+    //    201. 数字范围按位与
+    //给定范围 [m, n]，其中 0 <= m <= n <= 2147483647，返回此范围内所有数字的按位与（包含 m, n 两端点）。
+    //最终我们可以将问题重新表述为：给定两个整数，我们要找到它们对应的二进制字符串的公共前缀。
+    //右移两个数直到相等
+    public int rangeBitwiseAnd(int m, int n) {
+        int count=0;
+        while (m<n){
+            m=m>>1;
+            n=n>>1;
+            count++;
+        }
+        return n<<count;
+    }
+
+    //498. 对角线遍历
+    //给定一个含有 M x N 个元素的矩阵（M 行，N 列），请以对角线遍历的顺序返回这个矩阵中的所有元素，对角线遍历如下图所示。
+    public int[] findDiagonalOrder(int[][] matrix) {
+        if (matrix.length==0){
+            return new int[0];
+        }
+        int [] ans=new int[matrix.length*matrix[0].length];
+        int z=0;
+        LinkedHashMap<Integer,ArrayList<Integer>> map=new LinkedHashMap();
+        for(int i=0;i<matrix.length;i++){
+            for(int j=0;j<matrix[0].length;j++){
+                if(map.containsKey(i+j)){
+                    ArrayList<Integer> arrayList=map.get(i+j);
+                    arrayList.add(matrix[i][j]);
+                }
+                else {
+                    ArrayList<Integer> arrayList=new ArrayList<Integer>();
+                    arrayList.add(matrix[i][j]);
+                    map.put(i+j,arrayList);
+                }
+            }
+        }
+        for(Integer key :map.keySet()){
+            if(key%2!=0){
+                ArrayList<Integer> arrayList=map.get(key);
+                for (Integer integer : arrayList) {
+                    ans[z++] = integer;
+                }
+            }
+            else {
+                ArrayList<Integer> arrayList=map.get(key);
+                for (int i=arrayList.size()-1;i>=0;i--) {
+                    ans[z++] = arrayList.get(i);
+                }
+            }
+        }
+        return ans;
+    }
+
+
     //229. 求众数 II
     //给定一个大小为 n 的数组，找出其中所有出现超过 ⌊ n/3 ⌋ 次的元素。
     //说明: 要求算法的时间复杂度为 O(n)，空间复杂度为 O(1)。
@@ -314,9 +411,10 @@ public class Solution {
 //        printTree(root);
         LinkedList<Integer> l=new LinkedList<>();
         InorderTraversal(root,l);
-        for (int i=0;i<l.size();i++){
-            System.out.println(l.get(i));
-        }
+//        for (int i=0;i<l.size();i++){
+//            System.out.println(l.get(i));
+//        }
+        String s=new String();
 
     }
 
