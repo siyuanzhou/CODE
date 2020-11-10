@@ -1,8 +1,5 @@
 package site.newvalue.leetcode;
 
-import edu.princeton.cs.algs4.In;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 class ListNode {
@@ -262,10 +259,12 @@ public class Solution {
     //右移两个数直到相等
     public int rangeBitwiseAnd(int m, int n) {
         int count=0;
+
         while (m<n){
             m=m>>1;
             n=n>>1;
             count++;
+            
         }
         return n<<count;
     }
@@ -365,6 +364,24 @@ public class Solution {
         return ans;
     }
 
+    //455. 分发饼干
+    //假设你是一位很棒的家长，想要给你的孩子们一些小饼干。但是，每个孩子最多只能给一块饼干。对每个孩子 i ，都有一个胃口值 gi ，这是能让孩子们满足胃口的饼干的最小尺寸；并且每块饼干 j ，都有一个尺寸 sj 。如果 sj >= gi ，我们可以将这个饼干 j 分配给孩子 i ，这个孩子会得到满足。你的目标是尽可能满足越多数量的孩子，并输出这个最大数值。
+    public int findContentChildren(int[] g, int[] s) {
+        Arrays.sort(g);
+        Arrays.sort(s);
+        int i=0,j=0,ans=0;
+        while (i<g.length&&j<s.length){
+            if(g[i]<=s[j]){
+                ans++;
+                i++;
+                j++;
+            }
+            else{
+                j++;
+            }
+        }
+        return ans;
+    }
     //1305. 两棵二叉搜索树中的所有元素 给你 root1 和 root2 这两棵二叉搜索树。
     //请你返回一个列表，其中包含 两棵树 中的所有整数并按 升序 排序。
     //先中序搜索，得到有序的两个列表，后归并排序，得到最终结果
