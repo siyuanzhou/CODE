@@ -1,8 +1,5 @@
 package site.newvalue.leetcode;
 
-import edu.princeton.cs.algs4.In;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 class ListNode {
@@ -24,8 +21,31 @@ class TreeNode {
     }
 }
 
+class Pair{
+    int l;
+    int r;
+    Pair(int l,int r){
+        this.l=l;
+        this.r=r;
+    }
+
+    @Override
+    public String toString() {
+        return "Pair{" +
+                "l=" + l +
+                ", r=" + r +
+                '}';
+    }
+
+    Pair(){}
+}
 
 public class Solution {
+
+    public static void main(String[] args) {
+
+    }
+
     //常用静态方法
     //打印链表
     public static void printList(ListNode L) {
@@ -215,6 +235,97 @@ public class Solution {
         return ans.next;
     }
 
+//    17. 电话号码的字母组合
+//    给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+    //深度搜索
+    public List<String> letterCombinations(String digits) {
+        HashMap<Character,String> map=new HashMap<Character,String>(){
+            {
+                put('2',"abc");
+                put('3',"def");
+                put('4',"ghi");
+                put('5',"jkl");
+                put('6',"mno");
+                put('7',"pqrs");
+                put('8',"tuv");
+                put('9',"wxyz");
+            }
+        };
+        List<String> ans=new ArrayList<String>();
+        if(digits.length()==0){
+            return ans;
+        }
+        dfsAppend(map,ans,digits,0,new StringBuilder());
+        return ans;
+    }
+    public void dfsAppend(HashMap map, List<String> ans, String digits, int index, StringBuilder sb){
+        if(index==digits.length()){
+            ans.add(sb.toString());
+        }
+        else{
+            char a=digits.charAt(index);
+            String letter= (String) map.get(a);
+            for(int i=0;i<letter.length();i++){
+                sb.append(letter.charAt(i));
+                dfsAppend(map,ans,digits,index+1,sb);
+                sb.delete(index,sb.length());
+            }
+        }
+    }
+    //广度搜索
+    public List<String> letterCombinations2(String digits) {
+        //数组省内存
+        Deque<Integer> path=new ArrayDeque<>();
+        String[] map=new String[]{
+                "abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"
+        };
+        Queue<String> queue=new LinkedList<String>();
+        if(digits.length()==0){
+            return new ArrayList<String>();
+        }
+        queue.offer("");
+        for(int i=0;i<digits.length();i++){
+            char c=digits.charAt(i);
+            String letter=map[c-'2'];
+            int size=queue.size();
+            for(int z=0;z<size;z++){
+                String tmp=queue.poll();
+                for(int j=0;j<letter.length();j++){
+                    queue.offer(tmp+letter.charAt(j));
+                }
+            }
+        }
+        return new ArrayList<String>(queue);
+    }
+
+    //20. 有效的括号
+    //给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+    //有效字符串需满足：
+    //左括号必须用相同类型的右括号闭合。
+    //左括号必须以正确的顺序闭合
+    public boolean isValid(String s) {
+        Map<Character,Character> map=new HashMap<>();
+        map.put('(',')');
+        map.put('[',']');
+        map.put('{','}');
+        LinkedList<Character> stack = new LinkedList<>();
+        for(int i=0;i<s.length();i++){
+            Character ch=s.charAt(i);
+            if(stack.isEmpty())
+                stack.push(s.charAt(i));
+            else {
+                if(!ch.equals(map.get(stack.peek())))
+                {
+                    return false;
+                }
+                stack.pop();
+            }
+        }
+        return true;
+    }
+
+
+
     //28. 实现 strStr()
     //实现 strStr() 函数。
     //给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
@@ -254,6 +365,83 @@ public class Solution {
         }
         Arrays.binarySearch(s,'a');
     }
+
+//    46. 全排列
+//    给定一个 没有重复 数字的序列，返回其所有可能的全排列。
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> ans=new ArrayList<List<Integer>>();
+        if(nums==null||nums.length==0){
+            return ans;
+        }
+        int len=nums.length;
+        Deque<Integer> stack=new ArrayDeque<>();
+        boolean[] used=new boolean[len];
+        dfs(nums,ans,len,used,0,stack);
+        return ans;
+
+
+    }
+    public void dfs(int[] nums,List<List<Integer>> ans,int len,boolean[] used,int depth,Deque<Integer> stack){
+        if(depth==len){
+            ans.add(new ArrayList(stack));
+            return;
+        }
+        for(int i=0;i<len;i++){
+            if(used[i]==true){
+                continue;
+            }else{
+                used[i]=true;
+                stack.push(nums[i]);
+                dfs(nums,ans,len,used,depth+1,stack);
+                stack.pop();
+                used[i]=false;
+            }
+        }
+    }
+
+
+//103. 二叉树的锯齿形层次遍历
+//    给定一个二叉树，返回其节点值的锯齿形层次遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        if(root==null){
+            return null;
+        }
+        List<List<Integer>> ans= new LinkedList<>();
+        LinkedList<TreeNode> s1 =new LinkedList<TreeNode>();
+        s1.push(root);
+        LinkedList<TreeNode> s2=new LinkedList<TreeNode>();
+
+        while(!s1.isEmpty()||!s2.isEmpty()){
+            LinkedList<Integer> tmp=new LinkedList<>();
+            TreeNode cur=null;
+            if(!s1.isEmpty()){
+                while(!s1.isEmpty()){
+                    cur=s1.pop();
+                    tmp.add(cur.val);
+                    if(cur.right!=null){
+                        s2.push(cur.right);
+                    }
+                    if(cur.left!=null){
+                        s2.push(cur.left);
+                    }
+                }
+            }else{
+                while(!s2.isEmpty()){
+                    cur=s2.pop();
+                    tmp.add(cur.val);
+                    if(cur.left!=null){
+                        s1.push(cur.left);
+                    }
+                    if(cur.right!=null){
+                        s1.push(cur.right);
+                    }
+                }
+            }
+            ans.add(tmp);
+        }
+        return ans;
+    }
+
 
 
     //    201. 数字范围按位与
@@ -365,6 +553,29 @@ public class Solution {
         return ans;
     }
 
+    //435 删除最小的区间，使区间不重叠
+    public int eraseOverlapIntervals(int[][] intervals) {
+        LinkedList<Pair> l=new LinkedList<Pair>();
+        for(int i=0;i<intervals.length;i++){
+            l.add(new Pair(intervals[i][0],intervals[i][1]));
+        }
+        Collections.sort(l, (Pair o1, Pair o2) -> (o1.r!=o2.r)?(o1.r-o2.r):(o1.l-o2.l));
+        System.out.println(l.toString());
+        Iterator<Pair> it=l.iterator();
+        Pair pre=it.next();
+        int cout=0;
+        while (it.hasNext()){
+            Pair cur=it.next();
+            if(cur.l<pre.r){
+                cout++;
+            }
+            else {
+                pre=cur;
+            }
+        }
+        return cout;
+    }
+
     //1305. 两棵二叉搜索树中的所有元素 给你 root1 和 root2 这两棵二叉搜索树。
     //请你返回一个列表，其中包含 两棵树 中的所有整数并按 升序 排序。
     //先中序搜索，得到有序的两个列表，后归并排序，得到最终结果
@@ -396,27 +607,27 @@ public class Solution {
         return ans;
     }
 
-    public static void main(String[] args) {
-        /*用于测试的树，
-              5
-             / \
-            4   8
-           /   / \
-          11  13  4
-         /  \      \
-        7    2      1
-        */
-        Integer[] nums = {5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, 1};
-        TreeNode root = constructTree(nums);
-//        printTree(root);
-        LinkedList<Integer> l=new LinkedList<>();
-        InorderTraversal(root,l);
-//        for (int i=0;i<l.size();i++){
-//            System.out.println(l.get(i));
-//        }
-        String s=new String();
-
-    }
+//    public static void main(String[] args) {
+//        /*用于测试的树，
+//              5
+//             / \
+//            4   8
+//           /   / \
+//          11  13  4
+//         /  \      \
+//        7    2      1
+//        */
+//        Integer[] nums = {5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, 1};
+//        TreeNode root = constructTree(nums);
+////        printTree(root);
+//        LinkedList<Integer> l=new LinkedList<>();
+//        InorderTraversal(root,l);
+////        for (int i=0;i<l.size();i++){
+////            System.out.println(l.get(i));
+////        }
+//        String s=new String();
+//
+//    }
 
 
 }
